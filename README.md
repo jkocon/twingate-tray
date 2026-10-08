@@ -35,3 +35,7 @@ Podgląd bez ikony: `cargo run -- --dump` wypisuje menu dla bieżącego stanu de
 
 Instalacja: `sudo -A ./install.sh` (do `/usr/local/lib/twingate-tray`, autostart w `/etc/xdg/autostart`).
 Na komputerach synchronizowanych przez cachyos_sync robi to automatycznie `target/apply.sh` po każdym nowym commicie.
+
+## Licencja
+
+MIT – patrz [LICENSE](LICENSE).
