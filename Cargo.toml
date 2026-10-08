@@ -12,7 +12,6 @@ chrono = { version = "0.4", default-features = false, features = ["clock", "std"
 libc = "0.2"
 regex = "1"
 serde_json = "1"
-tray-common = { path = "../tray-common" }
 
 [profile.release]
 opt-level = "s"

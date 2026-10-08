@@ -8,6 +8,7 @@
 //! z install.sh pozwala na to bez hasła użytkownikom z grupy wheel (odpowiednik operatora Tailscale).
 //! Konta, exit nody i uwierzytelnianie zasobów idą przez CLI `twingate`.
 
+mod common;
 mod ipc;
 
 use std::os::unix::fs::PermissionsExt;
@@ -19,9 +20,9 @@ use std::time::{Duration, Instant, SystemTime, UNIX_EPOCH};
 use ksni::blocking::Handle;
 use regex::Regex;
 use serde_json::{json, Value};
-use tray_common::json::{arr, b, get, n, s, truthy};
-use tray_common::menu::{button, check, radio, sep, submenu, text, Menu};
-use tray_common::{bg, icon_path, open_url, refresh_now, run, run_input, App, Out, Poller, POLLER};
+use crate::common::json::{arr, b, get, n, s, truthy};
+use crate::common::menu::{button, check, radio, sep, submenu, text, Menu};
+use crate::common::{bg, icon_path, open_url, refresh_now, run, run_input, App, Out, Poller, POLLER};
 
 use ipc::ipc;
 
@@ -65,7 +66,7 @@ fn report(out: &Out, what: &str) {
 
 /// "Start with the system" = twingate.service włączony w systemd (tak robi `twingate config autostart`).
 fn service_enabled() -> bool {
-    tray_common::unit_enabled(SERVICE)
+    crate::common::unit_enabled(SERVICE)
 }
 
 /// Konta z /var/lib/twingate/profiles (czytelne dla wszystkich, tak samo czyta je `twingate account list`).
@@ -599,7 +600,7 @@ fn main() {
         println!("twingate-tray {}", env!("CARGO_PKG_VERSION"));
         return;
     }
-    let _lock = match tray_common::single_instance_lock(APP.id, "twingate-tray.lock") {
+    let _lock = match crate::common::single_instance_lock(APP.id, "twingate-tray.lock") {
         _ if dump => None,
         Ok(Some(file)) => Some(file),
         Ok(None) => {
@@ -643,10 +644,10 @@ fn main() {
     if dump {
         gather(&mut polled, true);
         (tray.status, tray.data, tray.error) = (polled.status, polled.data, polled.error);
-        println!("icon: {}\n{}", ksni::Tray::tool_tip(&tray).title, tray_common::menu::dump(&ksni::Tray::menu(&tray)));
+        println!("icon: {}\n{}", ksni::Tray::tool_tip(&tray).title, crate::common::menu::dump(&ksni::Tray::menu(&tray)));
         return;
     }
-    match tray_common::spawn_tray(tray) {
+    match crate::common::spawn_tray(tray) {
         Ok(handle) => {
             let _ = HANDLE.set(handle);
         }
@@ -665,7 +666,7 @@ fn main() {
         });
     };
     let _ = POLLER.set(Poller::start(POLL, poll));
-    tray_common::park_forever();
+    crate::common::park_forever();
 }
 
 #[cfg(test)]

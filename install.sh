@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Instaluje/aktualizuje twingate-tray w systemie. Uruchom jako root (sudo -A ./install.sh).
-# Na X13 robi to automatycznie target/apply.sh po każdej zmianie w twingate-tray/ albo tray-common/.
+# Na X13 robi to automatycznie target/apply.sh z cachyos_sync po każdym nowym commicie w tym repo.
 # Działający tray podmienia się dopiero po ponownym zalogowaniu (albo: pkill -x twingate-tray; /usr/local/lib/twingate-tray/twingate-tray &).
 # Kod wyjścia 10 = brak Twingate, nic nie zainstalowano.
 set -euo pipefail
@@ -16,7 +16,7 @@ fi
 pacman -S --needed --asdeps --noconfirm kdialog wl-clipboard libnotify xdg-utils
 
 # Binarka w Rust (od 2.0; wcześniej twingate_tray.py z GTK/AppIndicator), budowana jako zwykły użytkownik.
-BIN=$("$SRC/../tray-common/build.sh" "$SRC")
+BIN=$("$SRC/build.sh" "$SRC")
 
 install -Dm755 "$BIN" "$LIB/twingate-tray"
 rm -rf "$LIB/twingate_tray.py" "$LIB/__pycache__"  # wersja w Pythonie

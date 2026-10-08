@@ -837,15 +837,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "tray-common"
-version = "2.0.0"
-dependencies = [
- "ksni",
- "libc",
- "serde_json",
-]
-
-[[package]]
 name = "twingate-tray"
 version = "2.0.0"
 dependencies = [
@@ -854,7 +845,6 @@ dependencies = [
  "libc",
  "regex",
  "serde_json",
- "tray-common",
 ]
 
 [[package]]
