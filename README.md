@@ -26,5 +26,10 @@ przy łączeniu.
 Uwaga: `twingate -p` („print commands”) wcale nie jest suchym przebiegiem – wykonuje polecenia
 (łącznie z sudo), więc nie używać go do podglądania.
 
+Kod: Rust (`src/`, od wersji 2.0 zamiast `twingate_tray.py` z GTK/AppIndicator). Ikona i menu przez `ksni`
+(StatusNotifierItem + DBusMenu, bez GTK; lewy klik otwiera menu), wspólne części w `../tray-common/`.
+`install.sh` buduje binarkę jako zwykły użytkownik (`tray-common/build.sh`, cargo z pakietu `rust`).
+Podgląd bez ikony: `cargo run -- --dump` wypisuje menu dla bieżącego stanu demona; testy: `cargo test`.
+
 Instalacja: `sudo -A ./install.sh` (do `/usr/local/lib/twingate-tray`, autostart w `/etc/xdg/autostart`).
 Na X13 robi to automatycznie `target/apply.sh`.

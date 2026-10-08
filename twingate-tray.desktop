@@ -2,7 +2,7 @@
 Type=Application
 Name=Twingate Tray
 Comment=Twingate status and settings in the system tray
-Exec=/usr/bin/python3 /usr/local/lib/twingate-tray/twingate_tray.py
+Exec=/usr/local/lib/twingate-tray/twingate-tray
 Icon=twingate-tray
 Terminal=false
 NoDisplay=true

@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Instaluje/aktualizuje twingate-tray w systemie. Uruchom jako root (sudo -A ./install.sh).
-# Na X13 robi to automatycznie target/apply.sh po każdej zmianie w katalogu twingate-tray/.
+# Na X13 robi to automatycznie target/apply.sh po każdej zmianie w twingate-tray/ albo tray-common/.
+# Działający tray podmienia się dopiero po ponownym zalogowaniu (albo: pkill -x twingate-tray; /usr/local/lib/twingate-tray/twingate-tray &).
 # Kod wyjścia 10 = brak Twingate, nic nie zainstalowano.
 set -euo pipefail
 SRC="$(cd "$(dirname "$0")" && pwd)"
@@ -12,9 +13,13 @@ if ! command -v twingate >/dev/null; then
     exit 10
 fi
 
-pacman -S --needed --asdeps --noconfirm python-gobject libayatana-appindicator kdialog wl-clipboard
+pacman -S --needed --asdeps --noconfirm kdialog wl-clipboard libnotify xdg-utils
 
-install -Dm644 -t "$LIB" "$SRC/twingate_tray.py"
+# Binarka w Rust (od 2.0; wcześniej twingate_tray.py z GTK/AppIndicator), budowana jako zwykły użytkownik.
+BIN=$("$SRC/../tray-common/build.sh" "$SRC")
+
+install -Dm755 "$BIN" "$LIB/twingate-tray"
+rm -rf "$LIB/twingate_tray.py" "$LIB/__pycache__"  # wersja w Pythonie
 rm -rf "$LIB/icons"  # bez ikon o starych nazwach
 install -Dm644 -t "$LIB/icons" "$SRC"/icons/*.svg
 install -Dm644 -t /etc/xdg/autostart "$SRC/twingate-tray.desktop"
